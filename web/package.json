@@ -1,0 +1,16 @@
+{
+  "name": "cloud-bamboo",
+  "version": "1.0.0",
+  "description": "Simple server to play sound remotely in Raspberry Pi",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Chasinga",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.12.3",
+    "osc": "^1.1.1",
+    "require": "^2.4.17"
+  }
+}
