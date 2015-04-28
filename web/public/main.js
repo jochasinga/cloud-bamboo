@@ -1,10 +1,7 @@
 window.addEventListener("load", function() {
     "use strict"
 
-    // osc
-    var oscPort = new osc.WebSocketPort({
-	url: "ws://localhost:6449"
-    });
+    var socket = io();
 
     var Engine = famous.core.Engine;
     var Surface = famous.core.Surface;
@@ -17,13 +14,12 @@ window.addEventListener("load", function() {
     });
 
     var surfaces = [];
-    var notes = ["C", "D", "F","E", "G", "A", "B", "C"];
+    var notes = ["C", "D", "E","F", "G", "A", "B", "C^"];
 
     grid.sequenceFrom(surfaces);
 
     for(var i=0; i<8; i++) {
 	surfaces.push(new Surface({
-	    //content: "panel " + (i + 1),
 	    content: notes[i],
 	    size: [undefined, undefined],
 	    properties: {
@@ -35,33 +31,30 @@ window.addEventListener("load", function() {
 	    }
 	}));
 	surfaces[i].setContent('<h1>' + notes[i] + '</h1>');
-	dim(i);
-	back(i);
+	dim(i, notes[i]);
+	back(i, notes[i])
+
     }
 
-    function dim(surfaceIndex) {
-	surfaces[surfaceIndex].on("mousedown", function() {
+    function dim(surfaceIndex, note) {
+	surfaces[surfaceIndex].on("touchstart", function() {
+
 	    this.setProperties({
 		opacity: 0.5
 	    });
-	    // send osc
-	    oscPort.send({
-		address: "my/note",
-	    });
-	    console.log("sent OSC!");
+
+	    socket.emit(note);
+	    console.log("socket emitted %s!", note);
 	});
     }
 
-    function back(surfaceIndex) {
-	surfaces[surfaceIndex].on("mouseup", function() {
+    function back(surfaceIndex, note) {
+	surfaces[surfaceIndex].on("touchend", function() {
 	    this.setProperties({
 		opacity: 1
 	    });
-	    // send osc
-	    oscPort.send({
-		address: "my/note",
-	    });
-	    console.log("sent OSC!");
+
+	    socket.emit("lifted");
 	});
     }
 
